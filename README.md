@@ -1,1 +1,1 @@
-# Smart-Counter
+# smart-counter

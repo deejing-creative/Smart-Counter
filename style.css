@@ -1,0 +1,143 @@
+.time-set{
+  position:fixed;
+  top:1em;
+  left:1em;
+}
+
+.action-buttons{
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) and (orientation:portrait){
+  .clock{
+      position:fixed;
+      top: 35%;
+      left:8%;
+      width:auto;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px)  and (orientation:landscape){
+    .clock{
+        position:fixed;
+        top: 30%;
+        left:28%;
+        width:auto;
+    }
+} 
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width : 768px) {
+    .clock{
+        position:fixed;
+        top: 35%;
+        left:25.8em;
+        width:auto;
+    }
+}
+ 
+/* Large devices (laptops/desktops, 992px and up) */
+/* ok */
+ @media only screen and (min-width : 992px) {
+    .flip-clock-wrapper ul {
+        width: 80px;
+        height: 120px;
+        margin: 0 4px;
+      }
+      .flip-clock-wrapper ul li {
+        line-height: 120px;
+      }
+      .flip-clock-wrapper ul li a div div.inn {
+        font-size: 100px;
+      }
+      .flip-clock-wrapper ul,
+      .flip-clock-wrapper ul li a div div.inn {
+        border-radius: 10px;
+      }
+      .flip-clock-wrapper ul li a div.down {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+      .flip-clock-wrapper ul li a div.up:after {
+        top: 59px;
+      }
+      .flip-clock-dot.top {
+        top: 34px;
+      }
+      .flip-clock-dot.bottom {
+        top: 74px;
+      }
+      .flip-clock-dot {
+        width: 12px;
+        height: 12px;
+        left: 12px;
+      }
+      .flip-clock-divider {
+        width: 36px;
+      }
+
+      .clock{
+        position:fixed;
+        top: 33%;
+        left:30%;
+        width:auto;
+    }      
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width : 1200px) {
+    .clock{
+        position:fixed;
+        top: 35%;
+        left:36.5%;
+        width:auto;
+    }
+}
+
+
+.button-yellow {
+	-moz-box-shadow:inset 0px 1px 0px 0px #fff6af;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #fff6af;
+	box-shadow:inset 0px 1px 0px 0px #fff6af;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffec64), color-stop(1, #ffab23));
+	background:-moz-linear-gradient(top, #ffec64 5%, #ffab23 100%);
+	background:-webkit-linear-gradient(top, #ffec64 5%, #ffab23 100%);
+	background:-o-linear-gradient(top, #ffec64 5%, #ffab23 100%);
+	background:-ms-linear-gradient(top, #ffec64 5%, #ffab23 100%);
+	background:linear-gradient(to bottom, #ffec64 5%, #ffab23 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffec64', endColorstr='#ffab23',GradientType=0);
+	background-color:#ffec64;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #ffaa22;
+	display:inline-block;
+	cursor:pointer;
+	color:#333333;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ffee66;
+}
+.button-yellow:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffab23), color-stop(1, #ffec64));
+	background:-moz-linear-gradient(top, #ffab23 5%, #ffec64 100%);
+	background:-webkit-linear-gradient(top, #ffab23 5%, #ffec64 100%);
+	background:-o-linear-gradient(top, #ffab23 5%, #ffec64 100%);
+	background:-ms-linear-gradient(top, #ffab23 5%, #ffec64 100%);
+	background:linear-gradient(to bottom, #ffab23 5%, #ffec64 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffab23', endColorstr='#ffec64',GradientType=0);
+	background-color:#ffab23;
+}
+.button-yellow:active {
+	position:relative;
+	top:1px;
+}
+
+        

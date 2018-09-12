@@ -1,0 +1,229 @@
+<html>
+<head>
+        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<title>
+    Smart Counter
+</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" />
+   <link rel="stylesheet" href="lib/flipclock/flipclock.css">
+    <link rel="stylesheet" href="style.css">
+
+<style>
+   
+</style>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
+    <script src="lib/flipclock/flipclock.js"></script>	
+</head>
+<body>
+
+    <div class="clock"></div>  
+      
+    <div id="app">     
+        <div class="time-set" v-if="client != true">
+                <select v-model="timeCounter">
+                <option disabled value="">เวลาที่ต้องการนับถอยหลัง</option>
+                <option v-for="option in timeCollections" v-bind:value="option.value">
+                        {{ option.text }}
+                      </option>
+              </select>
+              <button type="button" data-toggle="modal" data-target="#modalConnect">
+                ...
+            </a>
+        </div>     
+        <div  class="action-buttons"  v-if="client != true">
+            <button class="button-yellow" @click="start">นับเวลา</button>
+            <button class="button-yellow" @click="stop">หยุด</button>    
+            <button class="button-yellow" @click="reset">เริ่มใหม่</button> 
+    
+        </div>  
+        
+        <div class="modal" id="modalConnect"  tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">เชื่อมต่อแบบหลายหน้าจอ</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <p>
+                           <div class="form-horizontal">
+                               <div class="form-group text-center">
+                                    <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://smart-counter-9ccf6.firebaseapp.com/?sid=' + session" />
+                               </div>
+                               <div class="form-group">
+                                   <label>https://smart-counter-9ccf6.firebaseapp.com/?sid={{session}}</label>
+                               </div>
+                           </div>
+                            
+                      </p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิดหน้าจอ</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  </div>
+
+    <audio id="audio" src="http://www.soundjay.com/button/beep-07.wav" autostart="false" ></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+
+<script type="text/javascript">   
+    var clock;  
+
+      var config = {
+          apiKey: "AIzaSyBq-VqxWAIJCxLIF7XsNRmn38qw3EUfaUc",
+          authDomain: "smart-counter-9ccf6.firebaseapp.com",
+          databaseURL: "https://smart-counter-9ccf6.firebaseio.com",
+          projectId: "smart-counter-9ccf6",
+          storageBucket: "smart-counter-9ccf6.appspot.com",
+          messagingSenderId: "47622830930"
+        };
+
+   firebase.initializeApp(config);
+
+
+    var app = new Vue({
+    el: '#app',
+    data: {
+        client:false
+        ,session:null
+        ,timeCounter:5
+        ,timeCollections:[]
+    }
+    ,created: function () {
+        var $this= this;
+        var sid=getUrlParameter("sid");
+        if(sid.length>0){
+            this.$data.session=sid;
+            this.$data.client=true;
+        }
+
+               for(i=1;i<=60;i++){
+                this.$data.timeCollections.push({
+                    text: i + " นาที"
+                    ,value : i
+                });
+               }
+            }
+    });
+    
+
+        clock=initClock();  
+
+        function initClock(){
+                clock = $('.clock').FlipClock(app.timeCounter*60, {
+                clockFace: 'MinuteCounter',
+                countdown: true,
+                autoStart: false,
+                language: "th",
+                callbacks: {
+                    start: function() {                                         
+                    }
+                    ,stop: function() {
+                        if(clock.getTime()==0){
+                            //Count Down Completed
+                            window.setTimeout(function(){
+                                playSound();
+                            }, 1000);    
+                        }else{
+                            //Stop by Button
+                            playSound();
+                        }                               
+		        	}
+                    ,interval: function(){
+                       // console.log(clock.getTime());
+                    }
+                }
+            });
+
+            return clock;
+        }       
+
+        function start(){
+            if(!app.client){
+                writeCommand('start',app.timeCounter);    
+            }
+
+            if(clock.getTime()==0){
+                initClock();
+            }
+
+            clock.start(); 
+        }
+
+        function stop(){
+            if(!app.client){
+                writeCommand('stop',app.timeCounter);    
+            } 
+
+            clock.stop();
+        }
+
+        function reset(){
+            if(!app.client){
+                writeCommand('reset',app.timeCounter);  
+            }
+            
+            initClock();
+        }        
+
+        if(app.client){
+            var ref =firebase.database().ref('/sessions/' +  app.session);
+            ref.on('child_added', function(snapshot) {
+
+            var val = snapshot.val();            
+            var chat=val.chat;
+
+                switch(chat){
+                    case "start": 
+                        app.$data.timeCounter=val.time;    
+                        start(); 
+                    break;
+                    case "stop": 
+                         stop();   
+                    break;
+                    case "reset": 
+                        app.$data.timeCounter=val.time;    
+                         reset(); 
+                    break;
+                }
+            });
+        }
+
+     function playSound() {
+          var sound = document.getElementById("audio");
+          sound.play();
+      }
+
+      function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+
+        if(!app.client){
+            firebase.database().ref('/sessions/').push()
+                  .then( function (result) {
+                      app.session= result.key;                                    
+            });
+        }
+
+        function writeCommand(command,time) {
+            firebase.database().ref('/sessions/' +  app.session ).push({
+            chat: command
+            ,time: time
+            });  
+    }
+</script>
+
+
+
+</body>
+</html>
